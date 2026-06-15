@@ -1,0 +1,27 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100dvw;
+    height: 100dvh;
+    margin: 0%;
+    padding: 0;
+}
+
+#tela_de_jogo {
+    width: 500px;
+    height: 500px;
+    display: flex;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+    position: relative;
+}
+
+#bola{
+    width: calc(100% / 25);
+    height: calc(100% / 25);
+    border-radius: 50%;
+    background-color: rgb(255, 0, 0);
+    position: absolute;
+}
