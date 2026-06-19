@@ -1,0 +1,89 @@
+body{
+    margin: 0%;
+    padding: 0%;
+    border: 0%;
+}
+
+#principal{
+    width: 1366px;
+    height: 768px;
+    background-color: rgb(44, 146, 146);
+    text-align: center;
+    padding: 3em;
+    margin: 0%;
+    padding: 0%;
+    border: 0%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 15px;
+}
+
+#menu{
+    width: 50%;
+    height: 50%;
+    border-radius: 5em;
+    background-color: rgb(255, 251, 0);
+    text-align: center;
+    margin: 0%;
+    padding: 0%;
+    border: 0%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+}
+
+#menu div{
+    width: calc(100%);
+    height: calc(100% / 4);
+    transition: transform 0.8s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: red;
+    font-weight: 900;
+}
+
+#menu div:hover{
+    background-color: blue;
+    color: aqua;
+    transform: scale(1.5);
+    
+}
+
+#audio, #configuracoes{
+    width: 3em;
+    position: absolute;
+    transition: 0.8s;
+}
+
+#audio{
+    bottom: 100px;
+    right: 50px;
+}
+
+#configuracoes{
+    top: 40px;
+    right: 40px;
+}
+
+#audio:hover, #configuracoes:hover{
+    width: 6em;
+    position: absolute;
+    padding: 2px;
+    background-color: rgb(255, 208, 0);
+    border-radius: 50%;
+}
+
+#audio:hover{
+    bottom: 70px;
+    right: 25px;
+}
+
+#configuracoes:hover{
+    top: 20px;
+    right: 20px;
+}

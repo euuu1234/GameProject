@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="jogo/estilo/iniciar.css">
+</head>
+<body>
+    <main id="principal"></main>
+    <script>
+        
+        function criarElemento(tipo, pai, texto, id){
+            let elementoCriado = document.createElement(`${tipo}`)
+            elementoCriado.id = `${id}`
+            elementoCriado.style.textTransform = ("uppercase")
+            elementoCriado.innerText = (`${texto}`)
+            document.querySelector(`#${pai}`).appendChild(elementoCriado)
+        }
+
+
+        criarElemento("h1", "principal", "jogo", "titulo")
+        criarElemento("p", "principal", "click para continuar", "click")
+
+        let verde = true
+
+        let piscar = setInterval(() => {
+            const titulo = document.querySelector("#titulo")
+
+            if (verde) {
+                titulo.style.color = "rgba(43, 255, 0, 0.651)"
+                document.querySelector("#click").style.color = "rgba(43, 255, 0, 0.651)"
+            } else {
+                titulo.style.color = "rgba(245, 230, 23, 0.84)"
+                document.querySelector("#click").style.color = "rgba(245, 230, 23, 0.84)"
+            }
+
+            verde = !verde
+        }, 500)
+
+        function proximaPagina(){
+            window.location.replace("jogo/lob/index.html")
+        }
+
+        function trocarTudo(){
+            proximaPagina()
+        }
+
+        window.addEventListener("keydown", (event) => {
+            trocarTudo(event.target)
+        })
+
+        window.addEventListener("click", (event) => {
+            trocarTudo(event.target)
+        })
+    </script>
+</body>
+</html>
