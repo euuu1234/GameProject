@@ -21,5 +21,5 @@ let faseAtual = 1;
 
 
     document.querySelector("#historia").addEventListener("click", ()=>{
-        window.location.replace(`/jogo/fases/fase${faseAtual}.html`)
+        window.location.replace(`../fases/fase${faseAtual}.html`)
     });
