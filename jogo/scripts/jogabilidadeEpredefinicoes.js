@@ -12,8 +12,8 @@ let atraz = false;
 let linhaAtual = 425;
 let colunaAtual = 20;
 
-let limite_baixo = 450;
-let pulo = 100;
+let limite_baixo = 768;
+let pulo = 150;
 let tamanhoOBJ = 50;
 let alturaInicialPulo = null;
 
@@ -110,7 +110,7 @@ function movimentar(tipoMovimento) {
         tipoMovimento == "inicial"
     ) {
         if (tipoMovimento == "frente") {
-            const novaColuna = Math.min(499 - tamanhoOBJ, colunaAtual + TamanhoTpx);
+            const novaColuna = Math.min(768 - tamanhoOBJ, colunaAtual + TamanhoTpx);
 
             if (!colideEm(novaColuna, linhaAtual)) {
                 colunaAtual = novaColuna;
