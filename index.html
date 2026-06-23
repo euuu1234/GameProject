@@ -8,8 +8,16 @@
 </head>
 <body>
     <main id="principal"></main>
-    <script>
+    <script type="module">
+        import configuracoes from "/jogo/dados/scripts/configuracoes.js";
         
+        //--------------------------------------------------------------------tela-------------------------------------------------------//
+
+        document.querySelector("#principal").style.width = configuracoes["displayWidth"] + "px"
+        document.querySelector("#principal").style.height = configuracoes["displayHeight"] + "px"
+
+        //--------------------------------------------------------------------criar elemento---------------------------------------------//
+
         function criarElemento(tipo, pai, texto, id){
             let elementoCriado = document.createElement(`${tipo}`)
             elementoCriado.id = `${id}`
@@ -18,9 +26,11 @@
             document.querySelector(`#${pai}`).appendChild(elementoCriado)
         }
 
-
         criarElemento("h1", "principal", "jogo", "titulo")
         criarElemento("p", "principal", "click para continuar", "click")
+
+        
+        //--------------------------------------------------------------------piscar-----------------------------------------------------//
 
         let verde = true
 
@@ -37,6 +47,8 @@
 
             verde = !verde
         }, 500)
+        
+        //--------------------------------------------------------------------redirecionamento-------------------------------------------//
 
         function proximaPagina(){
             window.location.replace("jogo/lob/index.html")

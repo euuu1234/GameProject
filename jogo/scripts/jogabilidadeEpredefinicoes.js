@@ -1,207 +1,263 @@
-const TamanhoTpx = 768 / 50;
+import configuracoes from "../dados/scripts/configuracoes.js";
 
-const grafico = (x) => x * TamanhoTpx;
-
-let subir = null;
-let gravidade = null;
-let objetoNoChao = true;
-let frente = false;
-let cima = false;
-let atraz = false;
-
-let linhaAtual = 425;
-let colunaAtual = 20;
-
-let limite_baixo = 768;
-let pulo = 150;
-let tamanhoOBJ = 50;
-let alturaInicialPulo = null;
-
-
-(()=>{
-    imagemPersonagem = document.createElement('img');
-    imagemPersonagem.id = "bola";
-    imagemPersonagem.src = "jogo/img/animacoes/lab1.png";
-    imagemPersonagem.style.position = "absolute"
-
-    document.querySelector("#tela_de_jogo").appendChild(imagemPersonagem);
-})()
-
-const personagem1 = document.querySelector("#bola");
 const principal = document.querySelector("#tela_de_jogo");
+const playerNoJogo = document.querySelector("#player");
 
-if (!personagem1 || !principal) {
-    throw new Error("Elemento #bola ou #tela_de_jogo não encontrado.");
-}
+//variaveis de relatividade de tela
 
-//personagem1.style.width = tamanhoOBJ + "px";
-personagem1.style.height = tamanhoOBJ + "px";
-personagem1.style.position = "absolute";
-personagem1.style.left = colunaAtual + "px";
-personagem1.style.top = linhaAtual + "px";
+const relatividadeTela = 10
 
-function criarBloco(localizacao_X, localizacao_Y, altura, largura) {
+//variaveis da movimentacao
+
+const tmnDoPulo = 40
+const tmnDoMovimento = 0.5
+
+
+//estado de movimento
+
+let andando = null
+let andandoPraTras = null
+let caindo = null
+let subindo = null
+
+//--------------------------------------configurar body--------------------------------------------------------//
+
+const body = document.querySelector("body")
+
+body.style.width = configuracoes["displayWidth"] + "px"
+body.style.height = configuracoes["displayHeight"] + "px"
+
+//-------------------------------------CriarBlocos-------------------------------------------------------------//
+
+
+
+function criarBloco(localizacao_X, localizacao_Y, alturaH, larguraL) {
+
     const div = document.createElement("div");
 
-    div.style.width = grafico(largura) + "px";
-    div.style.height = grafico(altura) + "px";
+    div.style.width = (larguraL * relatividadeTela) + "em";
+    div.style.height = (alturaH * relatividadeTela) + "em";
+
     div.style.position = "absolute";
-    div.style.left = grafico(localizacao_X) + "px";
-    div.style.top = grafico(localizacao_Y) + "px";
+
+    div.style.left = (localizacao_X * relatividadeTela) + "em";
+    div.style.top = (localizacao_Y * relatividadeTela) + "em";
+
     div.style.backgroundColor = "red";
 
     principal.appendChild(div);
 }
 
-function retanguloColide(ax, ay, aw, ah, bx, by, bw, bh) {
-    return (
-        ax < bx + bw &&
-        ax + aw > bx &&
-        ay < by + bh &&
-        ay + ah > by
-    );
-}
-
-function colideEm(posX, posY) {
-    return blocos.some((element) => {
-        const blocoX = grafico(element[0]);
-        const blocoY = grafico(element[1]);
-        const blocoW = grafico(element[3]);
-        const blocoH = grafico(element[2]);
-
-        return retanguloColide(
-            posX,
-            posY,
-            tamanhoOBJ,
-            tamanhoOBJ,
-            blocoX,
-            blocoY,
-            blocoW,
-            blocoH
-        );
-    });
-}
-
-function cair() {
-    if (gravidade != null) return;
-
-    objetoNoChao = null
-
-    gravidade = setInterval(() => {
-        const proximaLinha = linhaAtual + TamanhoTpx;
-
-        if (proximaLinha >= limite_baixo || colideEm(colunaAtual, proximaLinha)) {
-            clearInterval(gravidade);
-            objetoNoChao = true;
-            gravidade = null;
-            return;
-        }
-
-        linhaAtual = proximaLinha;
-        personagem1.style.top = linhaAtual + "px";
-    }, 60);
-}
-
-function movimentar(tipoMovimento) {
-    if (
-        tipoMovimento == "frente" ||
-        tipoMovimento == "atraz" ||
-        tipoMovimento == "atras" ||
-        tipoMovimento == "inicial"
-    ) {
-        if (tipoMovimento == "frente") {
-            const novaColuna = Math.min(768 - tamanhoOBJ, colunaAtual + TamanhoTpx);
-
-            if (!colideEm(novaColuna, linhaAtual)) {
-                colunaAtual = novaColuna;
-            }
-        } else if (tipoMovimento == "atraz" || tipoMovimento == "atras") {
-            const novaColuna = Math.max(0, colunaAtual - TamanhoTpx);
-
-            if (!colideEm(novaColuna, linhaAtual)) {
-                colunaAtual = novaColuna;
-            }
-        }
-
-        personagem1.style.left = colunaAtual + "px";
-        personagem1.style.top = linhaAtual + "px";
-
-        if(subir == null && gravidade == null){
-            cair();
-        }
-    } else if (tipoMovimento == "pulo") {
-        if(!objetoNoChao) return;
-        if (subir) return;
-
-        if (gravidade != null) {
-            clearInterval(gravidade);
-            gravidade = null;
-        }
-
-        alturaInicialPulo = linhaAtual;
-        const limiteSuperiorPulo = Math.max(0, alturaInicialPulo - pulo);
-
-        subir = setInterval(() => {
-            const proximaLinha = linhaAtual - TamanhoTpx;
-
-            if (proximaLinha <= limiteSuperiorPulo || colideEm(colunaAtual, proximaLinha)) {
-                clearInterval(subir);
-                subir = null;
-                cair();
-                return;
-            }
-
-            linhaAtual = proximaLinha;
-            personagem1.style.top = linhaAtual + "px";
-            personagem1.style.left = colunaAtual + "px";
-        }, 60);
-    }
-}
-
-// desenhar os blocos
 blocos.forEach((element) => {
-    criarBloco(element[0], element[1], element[2], element[3]);
+    criarBloco(
+        element[0],
+        element[1],
+        element[2],
+        element[3]
+    );
 });
 
-// posição inicial
-movimentar("inicial");
+//------------------------------------------loadPlayer--------------------------------------------------------//
 
-const teclas = {
-    CIMA: ['KeyW', 'ArrowUp'],
-    A: 'KeyA',
-    S: 'KeyS',
-    D: 'KeyD',
+function alterarPlayerPosition(){
+    playerNoJogo.style.left = player[`posicaoX`] + 'em'
+    playerNoJogo.style.top = player[`posicaoY`] + 'em'
+    playerNoJogo.style.height = player[`altura`] + 'em'
+    playerNoJogo.style.width = player[`largura`] + 'em'
 }
 
-// teclado
-window.addEventListener("keydown", (event) => {
+//animações
+
+function aleterarAnimacao(lado){
+    if(andandoPraTras == null && andando == null)
+    playerNoJogo.src = `../img/animacoes/homem${lado}.png`
+}
+
+aleterarAnimacao(1)
+alterarPlayerPosition()
+//--------------------------------------------COLISAO--------------------------------------------------------//
+
+function verificarColisao(
+    playerXnovo,
+    playerYnovo,
+){
+
+    return blocos.some((element) => {
+        const colidiuBloco = 
+            playerXnovo + player["largura"] > element[0] * relatividadeTela &&
+            playerXnovo < element[0] * relatividadeTela + element[3] * relatividadeTela &&
+            playerYnovo + player["altura"] > element[1] * 
+            relatividadeTela &&
+            playerYnovo < element[1] * 
+            relatividadeTela+ element[2] * 
+            relatividadeTela;
+        
+        return colidiuBloco
+    })
+}
+
+
+//-----------------------------------------MOVIMENTO--------------------------------------------------------//
+
+function subir(){
+    let pulo = 0
+    if(
+        subindo == null  &&
+        verificarColisao(player["posicaoX"], (player["posicaoY"] + tmnDoMovimento))
+    ){
+        aleterarAnimacao(4)
+        subindo = setInterval(()=>{
+
+            let novaLocY = player["posicaoY"] - tmnDoMovimento
+            if(
+                !verificarColisao(player["posicaoX"], novaLocY) &&
+                pulo <= tmnDoPulo
+            ){
+                player["posicaoY"] = novaLocY
+                alterarPlayerPosition()
+                pulo++
+            }else{
+                gravidade()
+                clearInterval(subindo)
+                subindo = null
+                pulo = 0
+            }
+        }, 10)
+    }
+}
+
+function andar(){
+    clearInterval(andandoPraTras)
+    andandoPraTras = null
+
+    clearInterval(andando)
+    andando = null
+
+    aleterarAnimacao(2)
+
+    andando = setInterval(()=>{
+
+        let novaLocX = player["posicaoX"] + tmnDoMovimento
+        if(
+            !verificarColisao(novaLocX, player["posicaoY"]) &&
+            andandoPraTras == null
+        ){
+            player["posicaoX"] = novaLocX
+            alterarPlayerPosition()
+        }else{
+            clearInterval(andando)
+            andando = null
+            gravidade()
+        }
+        if(
+            !verificarColisao(novaLocX, player["posicaoY"]) &&
+            (player["posicaoY"] + player["altura"]) !=  
+            relatividadeTela * 100)
+                return gravidade();
+
+    }, 15)
+}
+
+function andarParaTraz(){
+    clearInterval(andandoPraTras)
+    andandoPraTras = null
+
+    clearInterval(andando)
+    andando = null
+
+    aleterarAnimacao(3)
+
+    andandoPraTras = setInterval(()=>{
+
+        let novaLocX = player["posicaoX"] - tmnDoMovimento
+        if(
+            !verificarColisao(novaLocX, player["posicaoY"]) &&
+            andando == null
+        ){
+            player["posicaoX"] = novaLocX
+            alterarPlayerPosition()
+        }else{
+            clearInterval(andandoPraTras)
+            andandoPraTras = null
+        }
+        if(
+            !verificarColisao(novaLocX, player["posicaoY"]) &&
+            (player["posicaoY"] + player["altura"]) !=  
+            relatividadeTela * 100)
+                return gravidade();
+    }, 15)
+    
+}
+
+
+//---------------------------------------------gravidade------------------------------------------------//
+
+function gravidade(){
+    if(caindo == null){
+        caindo = setInterval(()=>{
+
+            let novaLocY = player["posicaoY"] + tmnDoMovimento
+            if(!verificarColisao(
+                player["posicaoX"],
+                novaLocY
+            )
+            ){
+                player["posicaoY"] = novaLocY
+                alterarPlayerPosition()
+            }
+            if(verificarColisao(player["posicaoX"], novaLocY) ){
+                clearInterval(caindo)
+                caindo = null
+            }
+
+        }, 30)
+    }
+}
+
+gravidade()
+
+//------------------------------------CONFIGURACAO DE CONTROLES------------------------------------------//
+
+window.addEventListener("keydown", (event)=>{
     switch (event.code) {
-        case teclas.CIMA[0]:
-        case teclas.CIMA[1]:
-            movimentar("pulo");
+        case "KeyA":
+            andarParaTraz();
             break;
-        case teclas.A:
-            movimentar("atraz");
+
+        case "KeyD":
+            andar();
             break;
-        case teclas.D:
-            movimentar("frente");
+
+        case "KeyW":
+            subir();
+            break;
+        
+        case "Space":
+            subir();
+            break;
+    
+        default:
             break;
     }
-});
+})
 
-// Primeira versão
-// teclado
-// window.addEventListener("keydown", (event) => {
-//     switch (event.key) {
-//         case "ArrowUp":
-//             movimentar("pulo");
-//             break;
-//         case "ArrowLeft":
-//             movimentar("atraz");
-//             break;
-//         case "ArrowRight":
-//             movimentar("frente");
-//             break;
-//     }
-// });
+window.addEventListener("keyup", (event)=>{
+    switch (event.code) {
+        case "KeyA":
+            aleterarAnimacao(1)
+            clearInterval(andandoPraTras)
+            andandoPraTras = null
 
+            break;
+
+        case "KeyD":
+            aleterarAnimacao(1)
+            clearInterval(andando)
+            andando = null
+
+            break;
+    
+        default:
+            break;
+    }
+})
