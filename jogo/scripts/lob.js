@@ -36,5 +36,13 @@ btnDeConfiguracoes.addEventListener("click", ()=>{
 
     criarElemento("div", "menu_segundario", "principal", "", "configTela")
 
-    criarElemento("div", "botao_segudario", "configTela", "tela", "tela")
+    criarElemento("div", "esquerda_menu_segundario", "configTela", "", "lateralEsquerdo")
+    
+    criarElemento("div", "segundo_menu_direita", "configTela", "", "lateralEsquerdo")
+
+    criarElemento("div", "botao_segudario", "lateralEsquerdo", "tela", "tela")
+
+    criarElemento("div", "botao_segudario", "lateralEsquerdo", "controle", "controle")
+
+    criarElemento("div", "botao_segudario", "lateralEsquerdo", "teclado", "teclado")
 })

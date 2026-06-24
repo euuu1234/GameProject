@@ -10,6 +10,15 @@ const criarElemento = (tipo, classe, pai, texto, id) =>{
     
     document.querySelector(`#${pai}`).appendChild(elementoCriado)
 }
+
+//--------------------------------------------------------------------criar menu opcao de config--------------//
+
+const criarMenuConfig = (pai, texto, id) =>{
+    criarElemento("div", pai, "segundo_menu_direita", texto, id)
+}
+
 //--------------------------------------------------------------------exportação------------------------------------------------------//
 
 export default criarElemento;
+
+
