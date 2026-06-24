@@ -31,9 +31,10 @@ document.querySelector("#historia").addEventListener("click", ()=>{
 const btnDeConfiguracoes = document.querySelector("#configuracoes")
 
 btnDeConfiguracoes.addEventListener("click", ()=>{
-    criarElemento("div", "menu_segundario", "menu", "configTela")
-    
-    const configTela = querySelector("#configTela")
+
+    document.querySelector("#menu").style.display = "none"
+
+    criarElemento("div", "menu_segundario", "principal", "", "configTela")
 
     criarElemento("div", "botao_segudario", "configTela", "tela", "tela")
 })
