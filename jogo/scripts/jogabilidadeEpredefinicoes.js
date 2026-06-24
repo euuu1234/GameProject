@@ -48,6 +48,8 @@ function criarBloco(localizacao_X, localizacao_Y, alturaH, larguraL) {
     principal.appendChild(div);
 }
 
+//chamada de funcao
+
 blocos.forEach((element) => {
     criarBloco(
         element[0],
@@ -75,6 +77,7 @@ function aleterarAnimacao(lado){
 
 aleterarAnimacao(1)
 alterarPlayerPosition()
+
 //--------------------------------------------COLISAO--------------------------------------------------------//
 
 function verificarColisao(
@@ -98,6 +101,8 @@ function verificarColisao(
 
 
 //-----------------------------------------MOVIMENTO--------------------------------------------------------//
+
+//pulo
 
 function subir(){
     let pulo = 0
@@ -125,6 +130,8 @@ function subir(){
         }, 10)
     }
 }
+
+//pra frente
 
 function andar(){
     clearInterval(andandoPraTras)
@@ -157,6 +164,8 @@ function andar(){
 
     }, 15)
 }
+
+//andar para esquerda
 
 function andarParaTraz(){
     clearInterval(andandoPraTras)
@@ -218,6 +227,8 @@ gravidade()
 
 //------------------------------------CONFIGURACAO DE CONTROLES------------------------------------------//
 
+//btn precionado
+
 window.addEventListener("keydown", (event)=>{
     switch (event.code) {
         case "KeyA":
@@ -240,6 +251,8 @@ window.addEventListener("keydown", (event)=>{
             break;
     }
 })
+
+//btn solto
 
 window.addEventListener("keyup", (event)=>{
     switch (event.code) {
