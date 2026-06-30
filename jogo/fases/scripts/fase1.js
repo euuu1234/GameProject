@@ -1,18 +1,19 @@
-const blocos = [
-    [0, 1, 0.1, 1],
-    [1, 2, 0.1, 1.99],
-    [0, 3, 0.1, 1],
-    [0, 4.5, 0.1, 1],
-    [7, 4, 0.1, 1],
-    [3, 4, 0.1, 1],
-    [3, 0, 3, 1]
+const elementos = [
+    { posicaoX: 0, posicaoY: 1, altura: 0.1, largura: 1, name: "plataforma" },
+    { posicaoX: 2, posicaoY: 2, altura: 1, largura: 1.99, name: "plataforma" },
+    { posicaoX: 0, posicaoY: 3, altura: 0.1, largura: 1, name: "plataforma" },
+    { posicaoX: 0, posicaoY: 4.5, altura: 0.1, largura: 1, name: "plataforma" },
+    { posicaoX: 7, posicaoY: 4, altura: 0.1, largura: 1, name: "plataforma" },
+    { posicaoX: 3, posicaoY: 4, altura: 0.1, largura: 1, name: "plataforma" }
 ]
 
 const player = {
     posicaoX: 1,
     posicaoY: 1,
-    altura: 8,
-    largura: 5,
-    personagem: 'homem'
+    altura: 3,
+    largura: 3,
+    personagem: 'homem',
+    velocidadeX: 0,
+    velocidadeY: 0
 }
 

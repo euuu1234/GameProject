@@ -96,22 +96,25 @@ body{
     right: 1.5em;
 }
 
-/*-----------------------------------------------------------configurações menu segundario-----------------------------------------------------------*/
+/* ----------------------------------------------------------caixa de configuração------------------------------------------------------------------- */
 
-/* menus de configuração e audio */
 .menu_segundario {
     width: 25em;
     height: 25em;
     max-width: 90%;
     max-height: 90%;
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(216, 241, 231);
     display: flex;
+    position: absolute;
+    overflow: hidden;
 }
+
+/*-----------------------------------------------------------configurações menu segundario-----------------------------------------------------------*/
 
 /* parte lateral esquerdo do menu segundario */
 #lateralEsquerdo {
     min-width: 7em;
-    height: 99,5%;
+    height: 100%;
     background-color: rgb(145, 138, 138);
     border: 1px solid rgb(73, 67, 67);
     display: flex;
@@ -163,15 +166,18 @@ body{
 }
 
 /* botões internos (parte direita do menu segundário) */
-#lateralDireito .botao_interno {
+.botao_interno {
     padding: 0.5em;
-    width: 100% ;
+    width: 85% ;
     justify-content: center;
     align-items: center;
     font-size: 1em;
     background-color: rgb(195, 204, 152);
     margin-top: 2em;
     color: rgb(21, 6, 153);
+    margin-left: auto;
+    margin-right: auto;
+    
 }
 
 select {

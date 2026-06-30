@@ -6,17 +6,11 @@ const criarElemento = (tipo, classe, pai, texto, id) =>{
     let elementoCriado = document.createElement(`${tipo}`)
     
     elementoCriado.id = `${id}`
-    elementoCriado.classList = classe
+    elementoCriado.classList.add(classe)
     elementoCriado.style.textTransform = ("uppercase")
     elementoCriado.innerText = (`${texto}`)
     
     document.querySelector(`#${pai}`).appendChild(elementoCriado)
-}
-
-//--------------------------------------------------------------------criar menu opcao de config--------------//
-
-const criarMenuConfig = (pai, texto, id) =>{
-    criarElemento("div", pai, "lateralDireito", texto, id)
 }
 
 //----------------------------------------------------------dimencionando a tela--------------------------------------------------------------//
@@ -44,24 +38,37 @@ document.querySelector("#historia").addEventListener("click", ()=>{
     window.location.replace(`../fases/fase${faseAtual}.html`)
 });
 
-//-----------------------------------------------------------esconder elementos------------------------------------------------------------//
+//-----------------------------------------------------------alterar visibilidade dos elementos----------------------------------------//
 
-function esconderElemento(id){
-    document.querySelector("#" + id).style.display = "none"
+function alterarVisibilidade(id, display){
+    document.querySelector("#" + id).style.display = display
 }
 
 //-----------------------------------------------------------criação de btn internos--------------------------------------------------//
 
-function botaoInterno(texto, id, encremento){
-    criarElemento("div", "botoes_internos", "lateralDireito", texto, id)
-    document.querySelector(`#${id}`).innerHTML += encremento
+function botaoInterno(texto, id, classe, incremento, pai){
+    let elementoPai = pai || "lateralDireito"
+    criarElemento("div", "botoes_internos", elementoPai, texto, id)
+
+    document.querySelector(`#${id}`).classList.add(classe)
+    document.querySelector(`#${id}`).innerHTML += incremento
     document.querySelector(`#${id}`).classList.add("botao_interno")
 }
 
-//-----------------------------------------------------------reaparecer elementos-----------------------------------------------------//
-
-function reaparecer(elemento){
-    document.querySelector("#" + elemento).style.display = "block"
+//----------------------------------------------------------criação do botão de sair-------------------------------------------------//
+function botaoSair(elementoPai){
+    criarElemento("img", "imagemFechar", elementoPai, "", "imagemX")
+    
+    const imagemX = document.querySelector("#imagemX")
+    
+    //adicionar evento ao botão de sair
+    imagemX.src = "../img/icones/imagemX.png"
+    imagemX.addEventListener("click", ()=>{
+        excluirElemento("setup")
+        menuVisibilidade("block")
+    })
+    
+    return imagemX;
 }
 
 //-----------------------------------------------------------exclusão de elementos-----------------------------------------------------//
@@ -70,81 +77,130 @@ function excluirElemento(elemento){
     document.querySelector(`#${elemento}`).remove()
 }
 
+//-----------------------------------------------------------visibilidade menu---------------------------------------------------------------//
+
+function menuVisibilidade(visibilidade){
+    alterarVisibilidade("configuracoes", visibilidade)
+    alterarVisibilidade("audio", visibilidade)
+    alterarVisibilidade("menu", visibilidade)
+}
+
 //-----------------------------------------------------------click em config-----------------------------------------------------------------//
 
 const btnDeConfiguracoes = document.querySelector("#configuracoes")
 
 btnDeConfiguracoes.addEventListener("click", ()=>{
-    //esconderElemento do menu principal
-    esconderElemento("configuracoes")
-    esconderElemento("audio")
-    esconderElemento("menu")
+    
+    menuVisibilidade("none")
 
     //criar menu secundario
-    criarElemento("div", "menu_segundario", "principal", "", "configTela")
-
-    criarElemento("div", "lateral_menu", "configTela", "", "lateralEsquerdo")
-    criarElemento("div", "lateral_menu", "configTela", "", "lateralDireito")
-
+    criarElemento("div", "menu_segundario", "principal", "", "setup")
+    
+    criarElemento("div", "lateral_menu", "setup", "", "lateralEsquerdo")
+    criarElemento("div", "lateral_menu", "setup", "", "lateralDireito")
+    
     //criar botões de opções do menu secundario
     criarElemento("div", "botao_segudario", "lateralEsquerdo", "tela", "tela")
     criarElemento("div", "botao_segudario", "lateralEsquerdo", "controle", "controle")
     criarElemento("div", "botao_segudario", "lateralEsquerdo", "teclado", "teclado")
-
+    
     //criar botões internos das opções do menu secundario
     botaoInterno(
         "Resolução de Tela",
         "ResolucaoDeTela",
+        "botao_interno",
         " <select id='Resolucao'><option value='1'>1920 x 1080</option><option value='2'>2560 x 1440</option><option value='3'>3840 x 2160</option></select>"
     )
-
-    //criação do botão de sair
-    function botaoSair(){
-        criarElemento("img", "", "lateralDireito", "", "imagemX")
-        
-        const imagemX = document.querySelector("#imagemX")
-
-        //adicionar evento ao botão de sair
-        imagemX.src = "../img/icones/imagemX.png"
-        imagemX.addEventListener("click", ()=>{
-            excluirElemento("configTela")
-            reaparecer("configuracoes")
-            reaparecer("audio")
-            reaparecer("menu")
-        })
-
-        return imagemX;
-    }
-
-    botaoSair()
-
+    
+    botaoSair('lateralDireito')
+    
     //adicionar evento ao botão de Resolução de Tela
     const btnResolucaoDeTela = document.querySelector("#tela")
     btnResolucaoDeTela.addEventListener("click", ()=>{
-        const lateralDireito = document.querySelector("#lateralDireito")
-        lateralDireito.innerHTML = ""
-        botaoInterno("Resolução de Tela", "ResolucaoDeTela", " <select id='Resolucao'><option value='1'>1920 x 1080</option><option value='2'>2560 x 1440</option><option value='3'>3840 x 2160</option></select>")
+        document.querySelector("#lateralDireito").innerHTML = ""
 
-        botaoSair()
+        botaoInterno("Resolução de Tela", "ResolucaoDeTela", "botao_interno", " <select id='Resolucao'><option value='1'>1920 x 1080</option><option value='2'>2560 x 1440</option><option value='3'>3840 x 2160</option></select>")
+        
+        botaoSair('lateralDireito')
     })
     
     //adicionar evento ao botão de teclado
     const btnTeclado = document.querySelector("#teclado")
     btnTeclado.addEventListener("click", ()=>{
-        const lateralDireito = document.querySelector("#lateralDireito")
-        lateralDireito.innerHTML = ""
-        botaoInterno("teclado", "teclas", " <select id='teclas'><option value='1'>WASD</option><option value='2'>Setas</option></select>")
+        document.querySelector("#lateralDireito").innerHTML = ""
 
-        botaoSair()
+        botaoInterno("teclado", "teclas", "botao_interno", " <select id='teclas'><option value='1'>WASD</option><option value='2'>Setas</option></select>")
+        
+        botaoSair('lateralDireito')
     })
     
     //adicionar evento ao botão de controle
     const btnControle = document.querySelector("#controle")
     btnControle.addEventListener("click", ()=>{
-        const lateralDireito = document.querySelector("#lateralDireito")
-        lateralDireito.innerHTML = ""
-        botaoInterno("controle", "botoes", " opcao")
+        document.querySelector("#lateralDireito").innerHTML = ""
 
-        botaoSair()
+        botaoInterno("controle", "botoes", "botao_interno", " <select id='botoes'><option value='1'>XBOX</option><option value='2'>Playstation</option></select>")
+        
+        botaoSair('lateralDireito')
     })
+})
+
+//-----------------------------------------------------------click em audio-----------------------------------------------------------------//
+
+const btnDeAudio = document.querySelector("#audio")
+
+btnDeAudio.addEventListener("click", ()=>{
+    
+    menuVisibilidade("none")
+
+    //criar menu secundario
+    criarElemento("div", "menu_segundario", "principal", "", "setup")
+
+    const menuSecundario = document.querySelector("#setup")
+
+    menuSecundario.style.flexDirection = "column"
+        
+    //criar botões internos das opções do menu secundario
+    botaoInterno(
+        "saida de audio",
+        "SaidaDeAudio",
+        "botao_interno",
+        " <select id='SaidaDeAudio'><option value='1'>Alto Falantes</option><option value='2'>Fone de Ouvido</option></select>",
+        "setup"
+    )
+
+    botaoInterno(
+        "volume",
+        "Volume",
+        "botao_interno",
+        " <input type='range' id='Volume' min='0' max='100' value='50'>",
+        "setup"
+    )
+
+    botaoInterno(
+        "qualidade de audio",
+        "QualidadeDeAudio",
+        "botao_interno",
+        " <select id='QualidadeDeAudio'><option value='1'>Baixa</option><option value='2'>Média</option><option value='3'>Alta</option></select>",
+        "setup"
+    )
+
+    botaoInterno(
+        "ativar efeitos sonoros",
+        "AtivarEfeitosSonoros",
+        "botao_interno",
+        " <select id='AtivarEfeitosSonoros'><option value='1'>Sim</option><option value='2'>Não</option></select>",
+        "setup"
+    )
+
+    botaoInterno(
+        "ativar música de fundo",
+        "AtivarMusicaDeFundo",
+        "botao_interno",
+        " <select id='AtivarMusicaDeFundo'><option value='1'>Sim</option><option value='2'>Não</option></select>",
+        "setup"
+    )
+    
+    botaoSair("setup")
+    
 })

@@ -1,24 +1,11 @@
 import configuracoes from "../dados/scripts/configuracoes.js";
 
+//captura de elementos do DOM
+
 const principal = document.querySelector("#tela_de_jogo");
 const playerNoJogo = document.querySelector("#player");
 
-//variaveis de relatividade de tela
 
-const relatividadeTela = 10
-
-//variaveis da movimentacao
-
-const tmnDoPulo = 40
-const tmnDoMovimento = 0.5
-
-
-//estado de movimento
-
-let andando = null
-let andandoPraTras = null
-let caindo = null
-let subindo = null
 
 //--------------------------------------configurar body--------------------------------------------------------//
 
@@ -30,247 +17,139 @@ body.style.height = configuracoes["displayHeight"] + "px"
 //-------------------------------------CriarBlocos-------------------------------------------------------------//
 
 
-
 function criarBloco(localizacao_X, localizacao_Y, alturaH, larguraL) {
 
     const div = document.createElement("div");
 
-    div.style.width = (larguraL * relatividadeTela) + "em";
-    div.style.height = (alturaH * relatividadeTela) + "em";
+    div.style.width = (larguraL * modificarProporcaoBloco) + "em";
+    div.style.height = (alturaH * modificarProporcaoBloco) + "em";
 
     div.style.position = "absolute";
 
-    div.style.left = (localizacao_X * relatividadeTela) + "em";
-    div.style.top = (localizacao_Y * relatividadeTela) + "em";
+    div.style.left = (localizacao_X * modificarProporcaoBloco) + "em";
+    div.style.top = (localizacao_Y * modificarProporcaoBloco) + "em";
 
     div.style.backgroundColor = "red";
 
     principal.appendChild(div);
 }
 
-//chamada de funcao
+//variavel de proporcao de blocos na tela
 
-blocos.forEach((element) => {
+const modificarProporcaoBloco = 5
+
+//chamada de funcao para criar blocos com base na matriz de blocos
+
+elementos.forEach((element) => {
     criarBloco(
-        element[0],
-        element[1],
-        element[2],
-        element[3]
+        element.posicaoX,
+        element.posicaoY,
+        element.altura,
+        element.largura
     );
 });
 
 //------------------------------------------loadPlayer--------------------------------------------------------//
 
-function alterarPlayerPosition(){
-    playerNoJogo.style.left = player[`posicaoX`] + 'em'
-    playerNoJogo.style.top = player[`posicaoY`] + 'em'
-    playerNoJogo.style.height = player[`altura`] + 'em'
-    playerNoJogo.style.width = player[`largura`] + 'em'
+//função para alterar a posição do player no jogo com base nas propriedades do objeto
+
+function alterarPlayerPosition(objetoJogo, objeto){
+    objetoJogo.style.left = objeto[`posicaoX`] + 'em'
+    objetoJogo.style.top = objeto[`posicaoY`] + 'em'
+    objetoJogo.style.height = objeto[`altura`] + 'em'
+    objetoJogo.style.width = objeto[`largura`] + 'em'
 }
 
-//animações
-
-function aleterarAnimacao(lado){
-    if(andandoPraTras == null && andando == null)
-    playerNoJogo.src = `../img/animacoes/homem${lado}.png`
-}
-
-aleterarAnimacao(1)
-alterarPlayerPosition()
-
-//--------------------------------------------COLISAO--------------------------------------------------------//
-
-function verificarColisao(
-    playerXnovo,
-    playerYnovo,
-){
-
-    return blocos.some((element) => {
-        const colidiuBloco = 
-            playerXnovo + player["largura"] > element[0] * relatividadeTela &&
-            playerXnovo < element[0] * relatividadeTela + element[3] * relatividadeTela &&
-            playerYnovo + player["altura"] > element[1] * 
-            relatividadeTela &&
-            playerYnovo < element[1] * 
-            relatividadeTela+ element[2] * 
-            relatividadeTela;
-        
-        return colidiuBloco
-    })
-}
-
+(()=>{
+    playerNoJogo.src = "../img/animacoes/andar10.png"
+})()
+alterarPlayerPosition(playerNoJogo, player)
 
 //-----------------------------------------MOVIMENTO--------------------------------------------------------//
 
-//pulo
+//Entrada do teclado
 
-function subir(){
-    let pulo = 0
-    if(
-        subindo == null  &&
-        verificarColisao(player["posicaoX"], (player["posicaoY"] + tmnDoMovimento))
-    ){
-        aleterarAnimacao(4)
-        subindo = setInterval(()=>{
-
-            let novaLocY = player["posicaoY"] - tmnDoMovimento
-            if(
-                !verificarColisao(player["posicaoX"], novaLocY) &&
-                pulo <= tmnDoPulo
-            ){
-                player["posicaoY"] = novaLocY
-                alterarPlayerPosition()
-                pulo++
-            }else{
-                gravidade()
-                clearInterval(subindo)
-                subindo = null
-                pulo = 0
-            }
-        }, 10)
+window.addEventListener("keydown", function (event) {
+    if (event.code === "KeyW" || event.code === "ArrowUp") {
+        movimentar("pulo", player)
     }
+    if (event.code === "KeyS" || event.code === "ArrowDown") {
+        movimentar("queda", player)
+    }
+    if (event.code === "KeyA" || event.code === "ArrowLeft") {
+        movimentar("esquerda", player)
+    }
+    if (event.code === "KeyD" || event.code === "ArrowRight") {
+        movimentar("direita", player)
+    }
+});
+
+function movimentar(direcao, objeto){
+    let velocidadeX = objeto["velocidadeX"]
+    let velocidadeY = objeto["velocidadeY"]
+    let novaLocX = objeto["posicaoX"] + velocidadeX * direcao
+    let novaLocY = objeto["posicaoY"] + velocidadeY
+    console.log(direcao)
+    
 }
 
-//pra frente
+let pular
+let cair
+let esquerda
+let direita
+let localizacaoDoPe
 
-function andar(){
-    clearInterval(andandoPraTras)
-    andandoPraTras = null
+//entrada de teclado
+//Calcula velocidade
+//Aplica gravidade
+//Calcula posição nova
+//Resolve colisões
+//Atualiza posição
+//Atualiza animação
+//Renderiza
 
-    clearInterval(andando)
-    andando = null
 
-    aleterarAnimacao(2)
 
-    andando = setInterval(()=>{
 
-        let novaLocX = player["posicaoX"] + tmnDoMovimento
+const verificaColisoes = function (objeto) {
+    let ladoDireito = objeto.posicaoX + objeto.largura
+    let ladoEsquerdo = objeto.posicaoX
+    let ladoSuperior = objeto.posicaoY
+    let ladoInferior = objeto.posicaoY + objeto.altura
+
+    elementos.forEach((element) => {
+
+        let ladoDireitoElemento = element.posicaoX * modificarProporcaoBloco + element.largura * modificarProporcaoBloco
+        let ladoEsquerdoElemento = element.posicaoX * modificarProporcaoBloco
+        let ladoSuperiorElemento = element.posicaoY * modificarProporcaoBloco
+        let ladoInferiorElemento = element.posicaoY * modificarProporcaoBloco + element.altura * modificarProporcaoBloco
+
         if(
-            !verificarColisao(novaLocX, player["posicaoY"]) &&
-            andandoPraTras == null
+
+            ladoDireito > ladoEsquerdoElemento &&
+            ladoEsquerdo < ladoDireitoElemento
+
         ){
-            player["posicaoX"] = novaLocX
-            alterarPlayerPosition()
-        }else{
-            clearInterval(andando)
-            andando = null
-            gravidade()
-        }
-        if(
-            !verificarColisao(novaLocX, player["posicaoY"]) &&
-            (player["posicaoY"] + player["altura"]) !=  
-            relatividadeTela * 100)
-                return gravidade();
+            return "esquerda"
+        }else if(
 
-    }, 15)
-}
+            ladoEsquerdo < ladoDireitoElemento &&
+            ladoDireito > ladoEsquerdoElemento
 
-//andar para esquerda
-
-function andarParaTraz(){
-    clearInterval(andandoPraTras)
-    andandoPraTras = null
-
-    clearInterval(andando)
-    andando = null
-
-    aleterarAnimacao(3)
-
-    andandoPraTras = setInterval(()=>{
-
-        let novaLocX = player["posicaoX"] - tmnDoMovimento
-        if(
-            !verificarColisao(novaLocX, player["posicaoY"]) &&
-            andando == null
         ){
-            player["posicaoX"] = novaLocX
-            alterarPlayerPosition()
-        }else{
-            clearInterval(andandoPraTras)
-            andandoPraTras = null
+            return "direita"
+        }else if(
+
+            ladoInferior > ladoSuperiorElemento &&
+            ladoSuperior < ladoInferiorElemento
+            
+        ){
+            return "cima"
+        }else if(
+            ladoSuperior < ladoInferiorElemento &&
+            ladoInferior > ladoSuperiorElemento
+        ){
+            return "baixo"
         }
-        if(
-            !verificarColisao(novaLocX, player["posicaoY"]) &&
-            (player["posicaoY"] + player["altura"]) !=  
-            relatividadeTela * 100)
-                return gravidade();
-    }, 15)
-    
+    })
 }
-
-
-//---------------------------------------------gravidade------------------------------------------------//
-
-function gravidade(){
-    if(caindo == null){
-        caindo = setInterval(()=>{
-
-            let novaLocY = player["posicaoY"] + tmnDoMovimento
-            if(!verificarColisao(
-                player["posicaoX"],
-                novaLocY
-            )
-            ){
-                player["posicaoY"] = novaLocY
-                alterarPlayerPosition()
-            }
-            if(verificarColisao(player["posicaoX"], novaLocY) ){
-                clearInterval(caindo)
-                caindo = null
-            }
-
-        }, 30)
-    }
-}
-
-gravidade()
-
-//------------------------------------CONFIGURACAO DE CONTROLES------------------------------------------//
-
-//btn precionado
-
-window.addEventListener("keydown", (event)=>{
-    switch (event.code) {
-        case "KeyA":
-            andarParaTraz();
-            break;
-
-        case "KeyD":
-            andar();
-            break;
-
-        case "KeyW":
-            subir();
-            break;
-        
-        case "Space":
-            subir();
-            break;
-    
-        default:
-            break;
-    }
-})
-
-//btn solto
-
-window.addEventListener("keyup", (event)=>{
-    switch (event.code) {
-        case "KeyA":
-            aleterarAnimacao(1)
-            clearInterval(andandoPraTras)
-            andandoPraTras = null
-
-            break;
-
-        case "KeyD":
-            aleterarAnimacao(1)
-            clearInterval(andando)
-            andando = null
-
-            break;
-    
-        default:
-            break;
-    }
-})
